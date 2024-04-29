@@ -2,13 +2,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from app.models.entities.yacht import YachtEntity
 from app.services.repositories.yacht_repository import YachtRepository
+from app.types.dtos.yacht_dtos import CreateYachtPayload, CreateYachtResponse
 from dependencies.repositories_loaders import get_yacht_repository
 
 yacht_controller = APIRouter(prefix="/yachts")
 
-@yacht_controller.post("/")
+@yacht_controller.post("/", response_model=CreateYachtResponse)
 def create_yacht(
-    body,
+    body: CreateYachtPayload,
     yacht_repository: Annotated[
         YachtRepository, Depends(get_yacht_repository)
     ],
