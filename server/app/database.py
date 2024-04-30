@@ -3,7 +3,7 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 
-DB_URL = "postgresql://postgres@localhost:5432/yacht-charter"
+DB_URL = "postgresql://postgres@localhost:5432/yacht-charter-local"
 
 @lru_cache
 def get_engine() -> Engine:
