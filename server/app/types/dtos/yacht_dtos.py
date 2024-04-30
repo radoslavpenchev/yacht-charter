@@ -1,9 +1,9 @@
-import dataclasses
-from typing import Optional
+from pydantic import BaseModel
+
 from app.types.enums.yacht_type import YachtType
 
-@dataclasses.dataclass
-class YachtEntity:
+
+class CreateYachtPayload(BaseModel):
     name: str
     make: str
     length: int
@@ -11,7 +11,8 @@ class YachtEntity:
     cabins: int
     passengers: int
     crew: int
-    type: YachtType
+    type: YachtType    
     port_id: int
 
-    id: Optional[int]= None
+class CreateYachtResponse(BaseModel):
+    message: str
