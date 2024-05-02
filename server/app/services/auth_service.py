@@ -1,3 +1,4 @@
+import bcrypt
 from app.models.entities.user import UserEntity
 from app.services.repositories.user_repository import UserRepository
 from app.types.enums.user_role import UserRole
@@ -19,4 +20,9 @@ class AuthService:
         except UserRepository.NotUnique:
             return False
         
-            
+    def hash_passsword(self, password):
+        salt = bcrypt.gensalt()
+        return bcrypt.hashpw(password = bytes(password, 'utf-8'), salt = salt)
+
+    def verify_password(self, password, hashed_password):
+        return bcrypt.checkpw(password = bytes(password, 'utf-8'), hashedpassword = hashed_password)
