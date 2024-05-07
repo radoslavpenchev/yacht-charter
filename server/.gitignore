@@ -1,1 +1,4 @@
 postgres-data/
+venv
+__pycache__
+.env
