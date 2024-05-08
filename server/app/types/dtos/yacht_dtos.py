@@ -16,3 +16,21 @@ class CreateYachtPayload(BaseModel):
 
 class CreateYachtResponse(BaseModel):
     message: str
+
+class UpdateYachtPayload(BaseModel):
+    id: int
+    name: str
+    make: str
+    length: int
+    width: int
+    cabins: int
+    passengers: int
+    crew: int
+    type: YachtType
+    port_id: int
+
+class UpdateYachtResponse(BaseModel):
+    message: str
+
+class DeleteYachtResponse(BaseModel):
+    message: str
