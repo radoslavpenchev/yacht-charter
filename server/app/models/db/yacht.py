@@ -15,6 +15,7 @@ class Yacht(BaseModel):
     passengers = Column(Integer, nullable=False)
     crew = Column(Integer, nullable=False)
     type = Column(Enum(*[type.value for type in YachtType], name="yacht_type"))
+    price = Column(Integer, nullable=False)
     
     port_id = Column(Integer, ForeignKey("ports.id"), nullable=False)
 

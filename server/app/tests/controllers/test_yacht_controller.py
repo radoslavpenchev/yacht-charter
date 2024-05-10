@@ -29,3 +29,40 @@ class TestYachtController(TestCase):
 
         self.assertEqual(response["message"], "successfully added a yacht: Test Yacht")
 
+    def test_update_yacht_success(self):
+        body =CreateYachtPayload(
+            name="Test Yacht",
+            make="Test Make",
+            length=50,
+            width=10,
+            cabins=4,
+            passengers=10,
+            crew=5,
+            type=YachtType.SAILING.value,
+            port_id=1
+        )
+
+        response = create_yacht(body=body, yacht_repository=self.yacht_repository)
+
+        self.yacht_repository.insert_one.assert_called_once()
+
+        self.assertEqual(response["message"], "successfully added a yacht: Test Yacht")
+    
+    def test_delete_yacht_success(self):
+        body =CreateYachtPayload(
+            name="Test Yacht",
+            make="Test Make",
+            length=50,
+            width=10,
+            cabins=4,
+            passengers=10,
+            crew=5,
+            type=YachtType.SAILING.value,
+            port_id=1
+        )
+
+        response = create_yacht(body=body, yacht_repository=self.yacht_repository)
+
+        self.yacht_repository.insert_one.assert_called_once()
+
+        self.assertEqual(response["message"], "successfully added a yacht: Test Yacht")
