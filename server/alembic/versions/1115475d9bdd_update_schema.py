@@ -22,6 +22,7 @@ def upgrade():
     op.add_column('reservations', sa.Column('yacht_id', sa.Integer(), nullable=False))
     op.create_foreign_key(None, 'reservations', 'yachts', ['yacht_id'], ['id'])
     op.create_foreign_key(None, 'reservations', 'users', ['user_id'], ['id'])
+    op.add_column('yachts', sa.Column('price', sa.Integer(), nullable=False))
     # ### end Alembic commands ###
 
 
@@ -31,4 +32,5 @@ def downgrade():
     op.drop_constraint(None, 'reservations', type_='foreignkey')
     op.drop_column('reservations', 'yacht_id')
     op.drop_column('reservations', 'user_id')
+    op.drop_column('yachts', 'price')
     # ### end Alembic commands ###
