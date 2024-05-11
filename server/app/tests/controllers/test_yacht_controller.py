@@ -20,6 +20,7 @@ class TestYachtController(TestCase):
             passengers=10,
             crew=5,
             type=YachtType.SAILING.value,
+            price=1000,
             port_id=1
         )
 
@@ -39,6 +40,7 @@ class TestYachtController(TestCase):
             passengers=10,
             crew=5,
             type=YachtType.SAILING.value,
+            price=1000,
             port_id=1
         )
 
@@ -58,6 +60,7 @@ class TestYachtController(TestCase):
             passengers=10,
             crew=5,
             type=YachtType.SAILING.value,
+            price=1000,
             port_id=1
         )
 

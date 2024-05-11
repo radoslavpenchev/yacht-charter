@@ -11,7 +11,8 @@ class CreateYachtPayload(BaseModel):
     cabins: int
     passengers: int
     crew: int
-    type: YachtType    
+    type: YachtType  
+    price: int  
     port_id: int
 
 class CreateYachtResponse(BaseModel):
@@ -27,6 +28,7 @@ class UpdateYachtPayload(BaseModel):
     passengers: int
     crew: int
     type: YachtType
+    price: int
     port_id: int
 
 class UpdateYachtResponse(BaseModel):

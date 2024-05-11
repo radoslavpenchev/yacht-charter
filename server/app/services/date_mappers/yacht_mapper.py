@@ -16,7 +16,7 @@ class YachtMapper(DataMapper):
             passengers = entity.passengers,
             crew = entity.crew,
             type = entity.type.value,
-            
+            price = entity.price,
             port_id = entity.port_id,
         )
     
@@ -31,6 +31,6 @@ class YachtMapper(DataMapper):
             passengers = model.passengers,
             crew = model.crew,
             type = YachtType(model.type),
-            
+            price=model.price,
             port_id = model.port_id,
         )
