@@ -1,10 +1,12 @@
-from typing import Annotated, List
+from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from app.models.entities.yacht import YachtEntity
-from app.services.repositories.yacht_repository import YachtRepository
+from app.services.repositories.port_repository import PortRepository
+from app.services.repositories.yacht_repository import YachtFilters, YachtRepository
 from app.types.dtos.yacht_dtos import CreateYachtPayload, CreateYachtResponse, DeleteYachtResponse, UpdateYachtPayload, UpdateYachtResponse
 from app.types.enums.country import Country
-from dependencies.repositories_loaders import get_yacht_repository
+from app.types.enums.yacht_type import YachtType
+from dependencies.repositories_loaders import get_port_repository, get_yacht_repository
 
 yacht_controller = APIRouter(prefix="/yachts")
 
@@ -70,25 +72,28 @@ def get_all_yachts(
     yachts = yacht_repository.get_all()
     return yachts
 
-@yacht_controller.get("/{port_id}", response_model=List[YachtEntity])
-def get_yachts_by_port(
-    port_id: int,
+
+@yacht_controller.get("/yachts", response_model=List[YachtEntity])
+def get_yachts(
     yacht_repository: Annotated[
         YachtRepository, Depends(get_yacht_repository)
     ],
+    country: Optional[str] = None,
+    length: Optional[int] = None,
+    passengers: Optional[int] = None,
+    type: Optional[str] = None,
+    port_id: Optional[int] = None,
 ):
-    yachts = yacht_repository.get_by_port(port_id=port_id)
+    filters = YachtFilters(
+        port_id = port_id,
+        country = country,
+        length = length,
+        passengers = passengers,
+        type = type,
+    )
+    yachts = yacht_repository.get_yachts(filters=filters)
     return yachts
 
-@yacht_controller.get("/{country}", response_model=List[YachtEntity])
-def get_yachts_by_country(
-    country: Country,
-    yacht_repository: Annotated[
-        YachtRepository, Depends(get_yacht_repository)
-    ],
-):
-    yachts = yacht_repository.get_by_country(country=country.value)
-    return yachts
 @yacht_controller.delete("/{yacht_id}", response_model=DeleteYachtResponse)
 def delete_yacht(
     yacht_id: int,

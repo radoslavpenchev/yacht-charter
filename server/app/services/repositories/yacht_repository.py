@@ -1,11 +1,36 @@
-from typing import List
+import dataclasses
+from typing import List, Optional
+from app.models.db.port import Port
 from app.models.db.yacht import Yacht
 from app.models.entities.yacht import YachtEntity
 from app.services.repositories.repository import Repository
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from app.types.enums.country import Country
+from app.types.enums.yacht_type import YachtType
 
+@dataclasses.dataclass
+class YachtFilters:
+    port_id: Optional[int] = None
+    country: Optional[Country] = None
+    length: Optional[int] = None
+    passengers: Optional[int] = None
+    type: Optional[YachtType] = None
+
+    def to_filter(self):
+        filters = []
+        if self.port_id:
+            filters.append(Yacht.port_id == self.port_id)
+        if self.country:
+            filters.append(Port.country == self.country)
+        if self.length:
+            filters.append(Yacht.length >= self.length)
+        if self.passengers:
+            filters.append(Yacht.passengers >= self.passengers)
+        if self.type:
+            filters.append(Yacht.type == self.type)
+
+        return filters
 class YachtRepository(Repository):
     class NotFound(Exception):
         def __init__(self, yacht_id: int):
@@ -40,16 +65,11 @@ class YachtRepository(Repository):
 
         return self.data_mapper.to_entities(yachts)
     
-    def get_by_port(self, port_id: int) -> List[YachtEntity]:
-        yachts = self.session.query(Yacht).filter(Yacht.port_id == port_id).all()
+    def get_yachts(self, filters: YachtFilters) -> List[YachtEntity]:
+        query = (self.session.query(Yacht).join(Port))
+        yachts = query.filter(*filters.to_filter()).all()
 
         return self.data_mapper.to_entities(yachts)
-    def get_by_country(self, country: str) -> List[YachtEntity]:
-        yachts = self.session.query(Yacht
-                ).join(Yacht.port).filter(Yacht.port.country == country).all()
-
-        return self.data_mapper.to_entities(yachts)
-    
     def remove_one(self, yacht_id: int):
         try:
             yacht = self.session.get(YachtEntity, yacht_id)

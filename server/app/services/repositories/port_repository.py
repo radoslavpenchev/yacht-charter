@@ -1,5 +1,9 @@
+from typing import List
+from app.models.db.port import Port
 from app.models.entities.port import PortEntity
+from app.models.entities.yacht import YachtEntity
 from app.services.repositories.repository import Repository
+from app.types.enums.country import Country
 
 
 class PortRepository(Repository):
@@ -10,3 +14,4 @@ class PortRepository(Repository):
         self.session.commit()
 
         return self.data_mapper.to_entity(model=port_model)
+    
