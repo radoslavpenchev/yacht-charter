@@ -1,9 +1,12 @@
-from typing import Annotated
+from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from app.models.entities.yacht import YachtEntity
-from app.services.repositories.yacht_repository import YachtRepository
+from app.services.repositories.port_repository import PortRepository
+from app.services.repositories.yacht_repository import YachtFilters, YachtRepository
 from app.types.dtos.yacht_dtos import CreateYachtPayload, CreateYachtResponse, DeleteYachtResponse, UpdateYachtPayload, UpdateYachtResponse
-from dependencies.repositories_loaders import get_yacht_repository
+from app.types.enums.country import Country
+from app.types.enums.yacht_type import YachtType
+from dependencies.repositories_loaders import get_port_repository, get_yacht_repository
 
 yacht_controller = APIRouter(prefix="/yachts")
 
@@ -23,7 +26,7 @@ def create_yacht(
         passengers = body.passengers,
         crew = body.crew,
         type = body.type,
-        
+        price=body.price,
         port_id = body.port_id,
     )
 
@@ -48,6 +51,7 @@ def update_yacht(
         crew = body.crew,
         type = body.type,
         id=yacht_id,
+        price=body.price,
         port_id = body.port_id,
     )
 
@@ -58,7 +62,38 @@ def update_yacht(
         raise HTTPException(status_code=404, detail= "Yacht not found") from exc
     except YachtRepository.AlreadyExists as exc:
         raise HTTPException(status_code=409, detail= "Yacht already exists") from exc
-    
+
+@yacht_controller.get("/", response_model=List[YachtEntity])
+def get_all_yachts(
+    yacht_repository: Annotated[
+        YachtRepository, Depends(get_yacht_repository)
+    ],
+):
+    yachts = yacht_repository.get_all()
+    return yachts
+
+
+@yacht_controller.get("/yachts", response_model=List[YachtEntity])
+def get_yachts(
+    yacht_repository: Annotated[
+        YachtRepository, Depends(get_yacht_repository)
+    ],
+    country: Optional[str] = None,
+    length: Optional[int] = None,
+    passengers: Optional[int] = None,
+    type: Optional[str] = None,
+    port_id: Optional[int] = None,
+):
+    filters = YachtFilters(
+        port_id = port_id,
+        country = country,
+        length = length,
+        passengers = passengers,
+        type = type,
+    )
+    yachts = yacht_repository.get_yachts(filters=filters)
+    return yachts
+
 @yacht_controller.delete("/{yacht_id}", response_model=DeleteYachtResponse)
 def delete_yacht(
     yacht_id: int,

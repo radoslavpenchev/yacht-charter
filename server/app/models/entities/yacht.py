@@ -12,6 +12,7 @@ class YachtEntity:
     passengers: int
     crew: int
     type: YachtType
+    price: int
     port_id: int
 
     id: Optional[int]= None
