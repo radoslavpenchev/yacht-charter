@@ -29,10 +29,12 @@ def create_yacht(
         price=body.price,
         port_id = body.port_id,
     )
-
-    yacht_repository.insert_one(yacht=yacht)
-
-    return {"message": f"successfully added a yacht: {yacht.name}"}
+    try:
+        yacht_repository.insert_one(yacht=yacht)
+        return {"message": f"successfully added a yacht: {yacht.name}"}
+    except YachtRepository.AlreadyExists as exc:
+        raise HTTPException(status_code=409, detail= "Yacht already exists") from exc
+    
 @yacht_controller.patch("/{yacht_id}", response_model=UpdateYachtResponse)
 def update_yacht(
     body: UpdateYachtPayload,

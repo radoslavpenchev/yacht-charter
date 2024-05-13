@@ -11,3 +11,6 @@ class CreatePortPayload(BaseModel):
 
 class CreatePortResponse(BaseModel):
     message: str
+
+class DeletePortResponse(BaseModel):
+    message: str
