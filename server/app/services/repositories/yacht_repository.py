@@ -41,12 +41,15 @@ class YachtRepository(Repository):
             super().__init__(f"Yacht already exists")
 
     def insert_one(self, yacht: YachtEntity) -> YachtEntity:
-        yacht_model = self.data_mapper.to_model(yacht)
+        try:
+            yacht_model = self.data_mapper.to_model(yacht)
 
-        self.session.add(yacht_model)
-        self.session.commit()
+            self.session.add(yacht_model)
+            self.session.commit()
 
-        return self.data_mapper.to_entity(model=yacht_model)
+            return self.data_mapper.to_entity(model=yacht_model)
+        except IntegrityError as exc:
+            raise self.AlreadyExists(yacht_id = yacht.id) from exc
         
     def update_yacht(self, yacht: YachtEntity) -> YachtEntity:
         current_yacht = self.session.get(Yacht, yacht.id)
