@@ -1,4 +1,5 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException
+from app.models.entities.user import UserEntity
 from app.services.auth_service import AuthService
 from app.services.repositories.user_repository import UserRepository
 from dependencies.repositories_loaders import get_user_repository
